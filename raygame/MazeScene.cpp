@@ -4,6 +4,9 @@
 #include "Mud.h"
 #include "Ghost.h"
 #include "Transform2D.h"
+#include "WanderComponent.h"
+#include "SeekComponent.h"
+#include "StateMachineComponent.h"
 
 Maze::TileKey _ = Maze::TileKey::OPEN;
 Maze::TileKey w = Maze::TileKey::WALL;
@@ -123,6 +126,14 @@ Maze::Tile Maze::createTile(int x, int y, TileKey key)
 		Ghost* ghost = new Ghost(position.x, position.y, 100, 50, 0xFF6666FF, this);
 		ghost->setTarget(m_player);
 		tile.actor = ghost;
+		/*WanderComponent* wanderComponent = new WanderComponent(1000, 100, 100);
+		ghost->addComponent(wanderComponent);
+
+		SeekComponent* seekComponent = new SeekComponent();
+		seekComponent->setSteeringForce(500);
+		seekComponent->setTarget(m_player);
+		ghost->addComponent(seekComponent);
+		ghost->addComponent<StateMachineComponent>();*/
 		addActor(tile.actor);
 		break;
 	}

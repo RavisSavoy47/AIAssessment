@@ -2,6 +2,7 @@
 #include "Actor.h"
 #include "SeekComponent.h"
 #include "WanderComponent.h"
+#include "PathfindComponent.h"
 #include "Transform2D.h"
 
 void StateMachineComponent::start()
@@ -14,7 +15,9 @@ void StateMachineComponent::start()
 	m_wanderComponent = getOwner()->getComponent<WanderComponent>();
 	m_wanderForce = m_wanderComponent->getSteeringForce();
 
-	m_currentState = IDLE;
+	m_pathFindComponent = getOwner()->getComponent<PathfindComponent>();
+
+	m_currentState = SEEK;
 }
 
 void StateMachineComponent::update(float deltaTime)
@@ -32,6 +35,7 @@ void StateMachineComponent::update(float deltaTime)
 	case IDLE:
 		m_seekComponent->setSteeringForce(0);
 		m_wanderComponent->setSteeringForce(0);
+		m_pathFindComponent->setEnabled(false);
 
 		if (targetInRange)
 			setCurrentState(SEEK);
@@ -40,6 +44,7 @@ void StateMachineComponent::update(float deltaTime)
 	case WANDER:
 		m_seekComponent->setSteeringForce(0);
 		m_wanderComponent->setSteeringForce(m_wanderForce);
+		m_pathFindComponent->setEnabled(false);
 
 		if (targetInRange)
 			setCurrentState(SEEK);
@@ -48,6 +53,7 @@ void StateMachineComponent::update(float deltaTime)
 	case SEEK:
 		m_seekComponent->setSteeringForce(m_seekForce);
 		m_wanderComponent->setSteeringForce(0);
+		m_pathFindComponent->setEnabled(false);
 
 		if (!targetInRange)
 			setCurrentState(WANDER);
