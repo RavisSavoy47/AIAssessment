@@ -68,6 +68,12 @@ float NodeGraph::manHattanDistance(Node* node, Node* goal)
 	return abs(node->position.x - goal->position.x) + abs(node->position.y - goal->position.y);
 }
 
+/// <summary>
+/// Finds the path by using A*
+/// </summary>
+/// <param name="start">Is the currentNode</param>
+/// <param name="goal">The targetNode that is equal to the goal</param>
+/// <returns>The path to the target</returns>
 DynamicArray<NodeGraph::Node*> NodeGraph::findPath(Node* start, Node* goal)
 {
 	resetGraphScore(start);
@@ -78,22 +84,27 @@ DynamicArray<NodeGraph::Node*> NodeGraph::findPath(Node* start, Node* goal)
 	Node* currentNode = start;
 	openList.addItem(start);
 
+	//keeps looping until the openList is empty
 	while (openList.getLength() > 0)
 	{
+		//Sorts by the Fscore
 		sortFScore(openList);
 		currentNode = openList[0];
 		openList.remove(currentNode);
 
+		//if the closeList still has currentNode then go into it
 		if (!closedList.contains(currentNode))
 		{
 			//For each of the nodes next to the current node set the g scores of each and set
 			for (int i = 0; i < currentNode->edges.getLength(); i++)
 			{
-				
+				//sets the targetNode
 				NodeGraph::Node* targetNode = currentNode->edges[i].target;
 				
+				//Checks the Gscore and if the gscore cost more that the edges 
 				if (targetNode->gScore == 0 || targetNode->gScore > currentNode->gScore + currentNode->edges[i].cost)
 				{
+					//set the scores
 					targetNode->gScore = currentNode->gScore + currentNode->edges[i].cost;
 					targetNode->hScore = manHattanDistance(currentNode, goal);
 					targetNode->fScore = targetNode->gScore + targetNode->hScore;
@@ -102,6 +113,7 @@ DynamicArray<NodeGraph::Node*> NodeGraph::findPath(Node* start, Node* goal)
 				}
 				if (!openList.contains(targetNode))
 				{
+					//Adds the target into the openList
 					openList.addItem(targetNode);
 					targetNode->color = 0xFF0000FF;
 				}	

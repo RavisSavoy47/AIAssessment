@@ -9,6 +9,9 @@
 #include "WanderComponent.h"
 #include "AABBCollider.h"
 
+/// <summary>
+/// sets the collider and adds the wander and pathFind components
+/// </summary>
 Ghost::Ghost(float x, float y, float maxSpeed, float maxForce, int color, Maze* maze)
 	: Agent(x, y, "Ghost", maxSpeed, maxForce)
 {
@@ -17,8 +20,8 @@ Ghost::Ghost(float x, float y, float maxSpeed, float maxForce, int color, Maze* 
 	setMaxForce(300);
 	m_pathfindComponent = new PathfindComponent(maze);
 	m_pathfindComponent->setColor(color);
-	/*m_wanderComponent = new WanderComponent(1000, 100, 100);
-	addComponent(m_wanderComponent);*/
+	m_wanderComponent = new WanderComponent(1000, 200, 300);
+	addComponent(m_wanderComponent);
 	addComponent(m_pathfindComponent);
 	addComponent(new SpriteComponent("Images/enemy.png"));
 

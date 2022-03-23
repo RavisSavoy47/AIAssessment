@@ -17,9 +17,13 @@ void StateMachineComponent::start()
 
 	m_pathFindComponent = getOwner()->getComponent<PathfindComponent>();
 
-	m_currentState = PATHFIND;
+	m_currentState = WANDER;
 }
 
+/// <summary>
+/// Mixed pathFinding with seek and wander
+/// </summary>
+/// <param name="deltaTime"></param>
 void StateMachineComponent::update(float deltaTime)
 {
 	Component::update(deltaTime);
@@ -35,24 +39,21 @@ void StateMachineComponent::update(float deltaTime)
 	{
 	case PATHFIND:
 		m_seekComponent->setSteeringForce(0);
-		m_wanderComponent->setSteeringForce(0);
+		m_wanderComponent->setSteeringForce(40);
 		m_pathFindComponent->setEnabled(true);
 
-		if (targetInPathRange)
-			setCurrentState(WANDER);
-
 		if (targetInRange)
-			setCurrentState(WANDER);
+			setCurrentState(SEEK);
 
 		break;
 	case WANDER:
-		m_seekComponent->setSteeringForce(10);
+		m_seekComponent->setSteeringForce(40);
 		m_wanderComponent->setSteeringForce(m_wanderForce);
 		m_pathFindComponent->setEnabled(false);
 
-		if (!targetInPathRange)
+		if(targetInRange)
 			setCurrentState(PATHFIND);
-		if (targetInRange)
+		if (targetInPathRange)
 			setCurrentState(SEEK);
 
 		break;

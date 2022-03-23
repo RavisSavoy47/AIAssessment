@@ -110,6 +110,7 @@ Maze::Tile Maze::createTile(int x, int y, TileKey key)
 		addActor(tile.actor);
 		break;
 	case TileKey::MUD:
+		//Sets the cost and includes the actor
 		tile.cost = 200.0f;
 		tile.actor = new Mud(position.x, position.y);
 		tile.node->walkable = true;
@@ -126,6 +127,9 @@ Maze::Tile Maze::createTile(int x, int y, TileKey key)
 		Ghost* ghost = new Ghost(position.x, position.y, 100, 50, 0xFF6666FF, this);
 		ghost->setTarget(m_player);
 		tile.actor = ghost;
+		/// <summary>
+		/// Include the behaviors into the scene
+		/// </summary>
 		WanderComponent* wanderComponent = new WanderComponent(1000, 100, 100);
 		ghost->addComponent(wanderComponent);
 
