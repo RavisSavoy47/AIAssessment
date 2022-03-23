@@ -30,7 +30,7 @@ private:
 	PathfindComponent* m_pathFindComponent;
 	float m_seekForce;
 	float m_wanderForce;
-	float m_seekRange = 300;
-	float m_pathFindRange = 150;
+	float m_seekRange = 150;
+	float m_pathFindRange = 50;
 };
 

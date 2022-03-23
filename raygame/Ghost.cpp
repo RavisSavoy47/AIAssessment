@@ -8,6 +8,7 @@
 #include "SpriteComponent.h"
 #include "WanderComponent.h"
 #include "AABBCollider.h"
+#include "Player.h"
 
 /// <summary>
 /// sets the collider and adds the wander and pathFind components
@@ -17,7 +18,7 @@ Ghost::Ghost(float x, float y, float maxSpeed, float maxForce, int color, Maze* 
 {
 	m_maze = maze;
 	getTransform()->setScale({ Maze::TILE_SIZE,Maze::TILE_SIZE });
-	setMaxForce(300);
+	setMaxForce(350);
 	m_pathfindComponent = new PathfindComponent(maze);
 	m_pathfindComponent->setColor(color);
 	m_wanderComponent = new WanderComponent(1000, 200, 300);
@@ -57,6 +58,11 @@ void Ghost::onCollision(Actor* other)
 		getTransform()->setWorldPostion(tilePosition);
 
 		getMoveComponent()->setVelocity({ 0, 0 });
+	}
+
+	if (Player* player = dynamic_cast<Player*>(other))
+	{
+		getTransform()->setWorldPostion(MathLibrary::Vector2(50, 50));
 	}
 }
 
