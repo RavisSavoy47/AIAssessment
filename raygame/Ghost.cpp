@@ -7,17 +7,22 @@
 #include "MoveComponent.h"
 #include "SpriteComponent.h"
 #include "WanderComponent.h"
+#include "AABBCollider.h"
 
 Ghost::Ghost(float x, float y, float maxSpeed, float maxForce, int color, Maze* maze)
 	: Agent(x, y, "Ghost", maxSpeed, maxForce)
 {
 	m_maze = maze;
 	getTransform()->setScale({ Maze::TILE_SIZE,Maze::TILE_SIZE });
-	setMaxForce(500);
+	setMaxForce(300);
 	m_pathfindComponent = new PathfindComponent(maze);
 	m_pathfindComponent->setColor(color);
+	/*m_wanderComponent = new WanderComponent(1000, 100, 100);
+	addComponent(m_wanderComponent);*/
 	addComponent(m_pathfindComponent);
 	addComponent(new SpriteComponent("Images/enemy.png"));
+
+	setCollider(new AABBCollider(Maze::TILE_SIZE, Maze::TILE_SIZE, this));
 }
 
 Ghost::~Ghost()

@@ -17,7 +17,7 @@ void StateMachineComponent::start()
 
 	m_pathFindComponent = getOwner()->getComponent<PathfindComponent>();
 
-	m_currentState = SEEK;
+	m_currentState = PATHFIND;
 }
 
 void StateMachineComponent::update(float deltaTime)
@@ -29,23 +29,29 @@ void StateMachineComponent::update(float deltaTime)
 	float distanceFromTarget = (targetPos - ownerPos).getMagnitude();
 
 	bool targetInRange = distanceFromTarget <= m_seekRange;
+	bool targetInPathRange = distanceFromTarget <= m_pathFindRange;
 
 	switch (m_currentState)
 	{
-	case IDLE:
+	case PATHFIND:
 		m_seekComponent->setSteeringForce(0);
 		m_wanderComponent->setSteeringForce(0);
-		m_pathFindComponent->setEnabled(false);
+		m_pathFindComponent->setEnabled(true);
+
+		if (targetInPathRange)
+			setCurrentState(WANDER);
 
 		if (targetInRange)
-			setCurrentState(SEEK);
+			setCurrentState(WANDER);
 
 		break;
 	case WANDER:
-		m_seekComponent->setSteeringForce(0);
+		m_seekComponent->setSteeringForce(10);
 		m_wanderComponent->setSteeringForce(m_wanderForce);
 		m_pathFindComponent->setEnabled(false);
 
+		if (!targetInPathRange)
+			setCurrentState(PATHFIND);
 		if (targetInRange)
 			setCurrentState(SEEK);
 
@@ -55,6 +61,8 @@ void StateMachineComponent::update(float deltaTime)
 		m_wanderComponent->setSteeringForce(0);
 		m_pathFindComponent->setEnabled(false);
 
+		if (targetInPathRange)
+			setCurrentState(PATHFIND);
 		if (!targetInRange)
 			setCurrentState(WANDER);
 

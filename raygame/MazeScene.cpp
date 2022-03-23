@@ -126,14 +126,14 @@ Maze::Tile Maze::createTile(int x, int y, TileKey key)
 		Ghost* ghost = new Ghost(position.x, position.y, 100, 50, 0xFF6666FF, this);
 		ghost->setTarget(m_player);
 		tile.actor = ghost;
-		/*WanderComponent* wanderComponent = new WanderComponent(1000, 100, 100);
+		WanderComponent* wanderComponent = new WanderComponent(1000, 100, 100);
 		ghost->addComponent(wanderComponent);
 
 		SeekComponent* seekComponent = new SeekComponent();
-		seekComponent->setSteeringForce(500);
+		seekComponent->setSteeringForce(200);
 		seekComponent->setTarget(m_player);
 		ghost->addComponent(seekComponent);
-		ghost->addComponent<StateMachineComponent>();*/
+		ghost->addComponent<StateMachineComponent>();
 		addActor(tile.actor);
 		break;
 	}
