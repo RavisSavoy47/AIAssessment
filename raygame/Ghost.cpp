@@ -32,6 +32,7 @@ Ghost::Ghost(float x, float y, float maxSpeed, float maxForce, int color, Maze* 
 Ghost::~Ghost()
 {
 	delete m_pathfindComponent;
+	delete m_wanderComponent;
 }
 
 void Ghost::update(float deltaTime)
