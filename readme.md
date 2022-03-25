@@ -1,6 +1,6 @@
 # Description 
 Its a survival game where the enemy is trying to find the player. The player has to use that maps turane to avoid the enemy.
-If the enemy catches the player te enemy will return to its spawnpoint. 
+If the enemy catches the player the enemy will return to its spawnpoint. 
 
 ## How To Play
 - Use WASD to move the player.
