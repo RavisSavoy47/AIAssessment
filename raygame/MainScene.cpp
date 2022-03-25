@@ -18,15 +18,6 @@ void MainScene::start()
 	agent->getTransform()->setScale({ 50,50 });
 	agent->addComponent(new SpriteComponent("Images/enemy.png"));
 
-	//WanderComponent* wanderComponent = new WanderComponent(1000, 100, 100);
-	//agent->addComponent(wanderComponent);
-
-	//SeekComponent* seekComponent = new SeekComponent();
-	//seekComponent->setSteeringForce(500);
-	//seekComponent->setTarget(player);
-	//agent->addComponent(seekComponent);
-	//agent->addComponent<StateMachineComponent>();
-
 	addActor(player);
 	addActor(agent);
 }
