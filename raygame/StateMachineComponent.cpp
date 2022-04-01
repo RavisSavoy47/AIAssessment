@@ -21,7 +21,9 @@ void StateMachineComponent::start()
 }
 
 /// <summary>
-/// Mixed pathFinding with seek and wander
+/// While the player is not in range the enemy wanders 
+/// Starts to pathfind if the player enters its range
+/// Starts to seek if the player enters the smaller range
 /// </summary>
 /// <param name="deltaTime"></param>
 void StateMachineComponent::update(float deltaTime)
