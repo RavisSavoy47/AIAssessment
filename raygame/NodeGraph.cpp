@@ -81,49 +81,65 @@ DynamicArray<NodeGraph::Node*> NodeGraph::findPath(Node* start, Node* goal)
 	//Insert algorithm here
 	DynamicArray<NodeGraph::Node*> openList = DynamicArray<NodeGraph::Node*>();
 	DynamicArray<NodeGraph::Node*> closedList = DynamicArray<NodeGraph::Node*>();
+	float currentFScore;
 	Node* currentNode = start;
 	openList.addItem(start);
 
 	//keeps looping until the openList is empty
 	while (openList.getLength() > 0)
 	{
-		//Sorts by the Fscore
 		sortFScore(openList);
 		currentNode = openList[0];
+
+		//If the current node is the goal then return
+		if (currentNode == goal)
+			return reconstructPath(start, goal);
+
+		//Remove the current node from the openset
 		openList.remove(currentNode);
 
-		//if the closeList still has currentNode then go into it
-		if (!closedList.contains(currentNode))
+		//Loop through all of the connected edges to the current node
+		for (int i = 0; i < currentNode->edges.getLength(); i++)
 		{
-			//For each of the nodes next to the current node set the g scores of each and set
-			for (int i = 0; i < currentNode->edges.getLength(); i++)
-			{
-				//sets the targetNode
-				NodeGraph::Node* targetNode = currentNode->edges[i].target;
-				
-				//Checks the Gscore and if the gscore cost more that the edges 
-				if (targetNode->gScore == 0 || targetNode->gScore > currentNode->gScore + currentNode->edges[i].cost)
-				{
-					//set the scores
-					targetNode->gScore = currentNode->gScore + currentNode->edges[i].cost;
-					targetNode->hScore = manHattanDistance(currentNode, goal);
-					targetNode->fScore = targetNode->gScore + targetNode->hScore;
-					targetNode->previous = currentNode;
-					
-				}
-				if (!openList.contains(targetNode))
-				{
-					//Adds the target into the openList
-					openList.addItem(targetNode);
-					targetNode->color = 0xFF0000FF;
-				}	
-			}
-			closedList.addItem(currentNode);
-		}
+			//Set the target node to be the edges target
+			NodeGraph::Node* targetNode = currentNode->edges[i].target;
+			targetNode->color = 0xFF0000FF;
 
-		if(currentNode == goal)
-			return reconstructPath(start, goal);
-	};
+			//If the path is not possible continue
+			if (!targetNode->walkable)
+				continue;
+
+			//If the target node is not in the closed set then set the fScore to the variable for later use
+			if (!closedList.contains(targetNode))
+			{
+				targetNode->gScore = currentNode->gScore + currentNode->edges[i].cost;
+				targetNode->hScore = manHattanDistance(targetNode, goal);
+				currentFScore = targetNode->gScore + targetNode->hScore;
+			}
+			//If it is in the closet set don't set the fScore
+			else
+				continue;
+
+			//If the openSet does not contain the target node and the gscore is greater than 0 or more than the cost of a different path
+			if (openList.contains(targetNode) && targetNode->fScore == 0 || targetNode->fScore > currentNode->fScore + currentNode->edges[i].cost)
+			{
+				//Set the fScore that was calculated earlier and set its previous node to be the current node
+				targetNode->fScore = currentFScore;
+				targetNode->previous = currentNode;
+			}
+			//If the open set does not contain the target node
+			if (!openList.contains(targetNode))
+			{
+				//Add the item to the open set and set the fScore that was calculated earlier and set its previous node to be the current node
+				openList.addItem(targetNode);
+				targetNode->fScore = currentFScore;
+				targetNode->previous = currentNode;
+			}
+		}
+		//After the node is finished with add the current node to the closed list
+		closedList.addItem(currentNode);
+	}
+	return reconstructPath(start, goal);
 }
 
 void NodeGraph::drawGraph(Node* start)
